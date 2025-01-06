@@ -10,6 +10,7 @@ const App = () => {
 const [newName, setNewName] = useState('')
 const [number, setNumber] = useState('')
 const [filterText, setFilterText] = useState('')
+const [msg,setMsg] = useState('')
 
 const handleFilterChange=(event)=>{
   setFilterText(event.target.value)
@@ -33,12 +34,20 @@ const onSubmit=(event)=>{
       const changeNode = {...isDuplicate,number:number}
       // updating(put) the number
       api.put(isDuplicate.id,changeNode).then((data)=>setPersons(persons.map((person)=>person.id === isDuplicate.id ? data : person)))
+      setMsg(`Updated Number for ${isDuplicate.name}`)
+      setTimeout(() => {
+        setMsg('')
+      }, 5000);
       }
     }
     else{
     // Adding(add) to json database 
     const newObj = {name : newName,number : number}
     api.add(newObj).then((data)=>setPersons(persons.concat(data)))
+    setMsg(`Added ${newName}`)
+    setTimeout(() => {
+      setMsg("")
+    }, 5000);
   }
   setNewName('')
   setNumber('') 
@@ -47,8 +56,16 @@ const onSubmit=(event)=>{
 const onDelete = (id,name) =>{
   if(window.confirm(`would you like to delete ${name}`)){
   api.del(id)
-    .then((data)=>console.log("the id",data.id,"have been deleted"))
-    .catch((err)=>console.log("error while deleting the data",err))
+    .then((data)=>{console.log("the id",data.id,"have been deleted")
+    setMsg(`Deleted ${data.name}`)
+    setTimeout(() => {
+      setMsg("")
+    }, 5000); })
+    .catch((err)=>{console.log("error while deleting the data",err)
+    setMsg("Seems Alreday Deleted")
+    setTimeout(() => {
+      setMsg('')
+    }, 5000);})
   setPersons((persons)=>{
    return persons.filter((person)=>person.id !== id);
   })
@@ -57,6 +74,7 @@ const onDelete = (id,name) =>{
   return (
     <div>
       <h2>Phonebook</h2>
+      <h1 style={{color: msg.toLowerCase().includes('del') ? 'red' : 'green'}}>{msg}</h1>
       <Filter value={filterText} onChangeHandle={handleFilterChange}/>
       <h2>add a new</h2>
       <PersonForm onsubmitHandle={onSubmit} nameValue={newName} onChangeHandleName={handleNameChange} numberValue={number} onChangeHandleNumber={handleNumberChange}/>
