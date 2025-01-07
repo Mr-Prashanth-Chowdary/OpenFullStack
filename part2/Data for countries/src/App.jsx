@@ -65,7 +65,13 @@ const App = () => {
               <li key={index}>{lang}</li>
             ))}
           </ul>
+          { weatherData && <>
           <img src={showData.flags.png} alt={showData.flags.alt} />
+          <h2>Weather in {weatherData.name}</h2>
+          <p>tempereature {weatherData.main.temp}</p>
+          <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} alt={`${weatherData.weather.description}`} />
+          {console.log(weatherData.weather[0].icon)}
+          </>}
         </>
       )
       : filterValues.length < 10 ? (
