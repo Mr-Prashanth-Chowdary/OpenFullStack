@@ -13,6 +13,7 @@ const App = () => {
   const onFilterChange = (event) => {
     setFilterText(event.target.value);
     setShowData(null); // Reset showData when filter text changes
+    setWeatherData(null)
   };
 
   const onShow = (country) => {
